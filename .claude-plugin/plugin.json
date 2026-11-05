@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "harness-audit",
+  "version": "0.1.0",
+  "description": "Audit and prune an existing coding-agent harness: flags bloated CLAUDE.md/AGENTS.md, unproven and unenforced rules, unused MCP tools, stale docs, and corrections that recur across past Claude Code sessions, with diffs applied only after approval.",
+  "author": {
+    "name": "arm-pz",
+    "url": "https://github.com/arm-pz"
+  },
+  "homepage": "https://skillsmith.tech/harness-audit/",
+  "repository": "https://github.com/arm-pz/harness-audit",
+  "keywords": ["claude-md", "agents-md", "agent-harness", "mcp", "agent-skills"],
+  "skills": "./skills/"
+}

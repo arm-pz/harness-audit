@@ -1,0 +1,15 @@
+{
+  "skill_name": "harness-audit",
+  "evals": [
+    {"id": 1, "prompt": "My CLAUDE.md is 400 lines now, help me cut it down", "should_trigger": true},
+    {"id": 2, "prompt": "Which of my MCP servers am I actually using?", "should_trigger": true},
+    {"id": 3, "prompt": "Audit my agent setup in this repo", "should_trigger": true},
+    {"id": 4, "prompt": "Claude keeps making the same mistakes and I can't tell which rule is missing", "should_trigger": true},
+    {"id": 5, "prompt": "Feels like the agent got dumber since I added all those rules", "should_trigger": true},
+    {"id": 6, "prompt": "Set up agent rules for this repo", "should_trigger": false},
+    {"id": 7, "prompt": "My CLAUDE.md is 900 lines and Claude still gets env vars wrong", "should_trigger": false},
+    {"id": 8, "prompt": "Review this PR for bugs", "should_trigger": false},
+    {"id": 9, "prompt": "My recruiter-lens skill fires on the wrong requests", "should_trigger": false},
+    {"id": 10, "prompt": "Audit my site's SEO", "should_trigger": false}
+  ]
+}
