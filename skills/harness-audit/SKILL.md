@@ -29,6 +29,8 @@ Scripts live in this skill's `scripts/` folder. Write their output to a temporar
 
 Lists instruction files, `.claude/` rules, settings, hooks, MCP servers, permissions, skills, commands, agents and lint/CI config, at project and user level (`--no-user` to skip `~/.claude`). Read the files it lists; do not rely on the counts alone.
 
+Symlinked folders are followed, so a skill installed with `npx skills add` is counted; `linked_to` shows where a linked file really lives, which is how a second copy of a skill the repo already ships shows up. Hooks only come from `settings.json` and `settings.local.json`: hooks from plugins, managed settings or the runtime are not listed, so name them under "Not checked" when you know they exist.
+
 ### 2. Mine sessions
 
     python <skill-dir>/scripts/mine_sessions.py <project-root> > <tmp>/sessions.json
@@ -47,7 +49,7 @@ Findings ranked by impact (context saved or failures prevented), highest first:
 
     # Harness audit — <project>
     Scope: <files read> · <N sessions mined | session mining skipped: reason>
-    Score: <x>/6 checks passing
+    Score: <x>/6 checks passing (<n> inconclusive)
 
     ## Findings
     ### 1. <one-line finding>  [check: <name>] [action: delete | trial-remove | enforce | add-rule | merge | remove-tool | handoff]

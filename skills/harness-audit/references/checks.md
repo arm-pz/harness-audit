@@ -1,11 +1,12 @@
 # The six checks
 
-Each check has a pass condition, what counts as evidence, and the fix to propose. A check passes when it produces no finding above `trial-remove`.
+Each check has a pass condition, what counts as evidence, and the fix to propose. A check passes when it produces no finding above `trial-remove` and had something to examine; one with nothing to examine is INCONCLUSIVE (see Scoring).
 
 ## 1. Missed corrections → `add-rule` or `enforce`
 
 Source: `sessions.json` clusters.
 
+- Needs at least 2 mined sessions. With fewer, this check did not run: report it as INCONCLUSIVE, not as a pass.
 - A cluster with **3+ corrections across 2+ sessions** is a missing rule.
 - If the correction is mechanical (formatting, a forbidden command, a file that must not be touched, tests not run), propose a hook or linter rule, not prose.
 - If it is judgement (naming, architecture preference), propose one line in the right instruction file, worded as the instruction plus its reason.
@@ -57,3 +58,5 @@ Source: instruction files vs the repo.
 ## Scoring
 
 One point per check with no finding at `delete`, `enforce`, `add-rule`, `merge` or `remove-tool` level. `trial-remove` findings do not cost a point; a `handoff` finding costs the point of the check that raised it. Report the score as x/6 and never round up.
+
+A check that had nothing to examine is INCONCLUSIVE, never a pass, and earns no point: check 1 with fewer than 2 sessions, checks 2 and 5 with no rules, check 3 with no instruction files, check 6 with no references to verify. Report it as `x/6 (n inconclusive)` and list each one under "Not checked" with its reason.

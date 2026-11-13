@@ -8,6 +8,7 @@ skills, commands and agents, in the project and (unless --no-user) in
 ~/.claude. Read-only. Standard library only.
 """
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -38,6 +39,36 @@ def walk(root: Path, max_depth: int = 6):
                     stack.append((entry, depth + 1))
             else:
                 yield entry
+
+
+def find_files(folder: Path, name_or_suffix: str):
+    """Files under folder matching a name ("SKILL.md") or suffix (".md"), symlinks followed.
+
+    Path.rglob does not follow symlinked folders, and `npx skills add` installs each skill into
+    .claude/skills as a symlink to .agents/skills/<name>, so rglob would count those skills as 0.
+    Each real folder is visited once, so a symlink loop cannot recurse forever.
+    """
+    seen, found = set(), []
+    for current, dirs, files in os.walk(folder, followlinks=True):
+        real = os.path.realpath(current)
+        if real in seen:
+            dirs[:] = []
+            continue
+        seen.add(real)
+        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS)
+        for f in files:
+            if f == name_or_suffix or (name_or_suffix.startswith(".") and f.endswith(name_or_suffix)):
+                found.append(Path(current) / f)
+    return sorted(found)
+
+
+def file_entry(path: Path, base: Path):
+    """A listed file; linked_to names where it really lives when a symlink takes it outside base."""
+    entry = {"path": str(path), "lines": line_count(path)}
+    real, real_base = os.path.realpath(path), os.path.realpath(base)
+    if os.path.commonpath([real, real_base]) != real_base:
+        entry["linked_to"] = real
+    return entry
 
 
 def load_json(path: Path):
@@ -82,12 +113,12 @@ def scan_claude_dir(base: Path, label: str, report: dict, root: Path):
     for kind in ("rules", "commands", "agents"):
         folder = base / kind
         if folder.is_dir():
-            for f in sorted(folder.rglob("*.md")):
-                report[kind].append({"path": str(f), "lines": line_count(f)})
+            for f in find_files(folder, ".md"):
+                report[kind].append(file_entry(f, base))
     skills = base / "skills"
     if skills.is_dir():
-        for f in sorted(skills.rglob("SKILL.md")):
-            report["skills"].append({"path": str(f), "lines": line_count(f)})
+        for f in find_files(skills, "SKILL.md"):
+            report["skills"].append(file_entry(f, base))
 
 
 def main() -> int:
